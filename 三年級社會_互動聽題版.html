@@ -1,0 +1,301 @@
+
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>三年級社會 互動式聽題版</title>
+  <style>
+    body { font-family: system-ui, -apple-system, "Noto Sans TC", "Segoe UI", Roboto, "PingFang TC", "Heiti TC", "Microsoft JhengHei", sans-serif; line-height: 1.6; margin: 0; }
+    header { position: sticky; top: 0; background: #fff; border-bottom: 1px solid #eee; padding: 12px 16px; z-index: 10; }
+    header h1 { font-size: 1.1rem; margin: 0 0 8px; }
+    .controls { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    .controls label { font-size: 0.9rem; }
+    .container { padding: 12px 16px 80px; }
+    .tip { color: #555; font-size: 0.95rem; margin: 8px 0 14px; }
+    .line { padding: 8px 10px; border-radius: 8px; margin: 2px 0; cursor: pointer; }
+    .line:nth-child(odd) { background: #fafafa; }
+    .line:active, .line.reading { background: #e9f5ff; outline: 2px solid #bfe0ff; }
+    .section { margin: 18px 0 8px; font-weight: 700; }
+    .sub { margin: 10px 0 6px; font-weight: 600; color: #333; }
+    .toolbar { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #eee; padding: 10px 16px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    button { padding: 8px 12px; border-radius: 10px; border: 1px solid #ddd; background: #f7f7f7; font-size: 1rem; }
+    button:active { transform: translateY(1px); }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+    .meta { color: #666; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>台東縣卑南鄉太平國民小學 114 學年度上學期 三年級社會領域 期中定期評量（互動聽題版）</h1>
+    <div class="controls">
+      <label>語速
+        <input id="rate" type="range" min="0.6" max="1.4" step="0.05" value="1" />
+        <span id="rateVal">1.00×</span>
+      </label>
+      <label>語音
+        <select id="voiceSelect"></select>
+      </label>
+      <button id="pauseBtn">暫停</button>
+      <button id="resumeBtn">繼續</button>
+      <button id="stopBtn">停止</button>
+      <span class="meta">提示：點一下任一題目或任一行文字，即可朗讀該行。</span>
+    </div>
+  </header>
+
+  <div class="container" id="content"></div>
+
+  <div class="toolbar">
+    <button id="readSelectionBtn">朗讀選取文字</button>
+    <button id="readAllBtn">自動連播（從目前行起）</button>
+    <span class="meta">可雙擊某行以只播放該行；單擊後按自動連播可往下逐行朗讀。</span>
+  </div>
+
+  <!-- Raw exam text pasted below; JS will split into tappable lines. -->
+  <textarea id="raw" class="sr-only">
+台東縣卑南鄉太平國民小學114學年度上學期三年級社會領域期中定期評量卷
+命題教師：黃淑慧老師  評量範圍：Ch1~Ch2      班級：三甲 座號：   姓名：
+
+一、是非題：每格 1 分、共 10 分
+(　　)1. 如果遭遇性騷擾，可撥打113求助。
+(　　)2. 戶外教育前，要留意服裝穿著、集合時間和地點。
+(　　)3. 自己一個人出門到公園打籃球，也算是一種家庭活動。
+(　　)4. 學習遇到問題時，可以上網查詢相關資料。
+(　　)5. 我們應該定期檢查消防設備，以維護居家安全
+(　　)6. 我要懂得區分什麼事情是該做，什麼事情是想做。
+(　　)7. 上課時遇到聽不懂的內容，應立即起身請教成績好的同學。
+(　　)8. 每人想參加的活動不一樣，是因為興趣、專長的不同。
+(　　)9. 上課時如果要表達自己的意見，應該要先舉手
+(　　)10. 養成「課前預習、課後複習」的習慣能讓學習更有效率。
+
+二、選擇題：每格 1 分、共 10 分
+(　　)1. 我們可以用哪一種方式來解決學習上的困難？　①去圖書館找書籍　②利用網路找資料　③請師長協助　④以上皆可
+(　　)2. 下列哪個不是良好的學習態度？　①上課時玩手機　②課前預習　③睡覺前整理書包　④課後複習
+(　　)3. 下列哪個是透過參與學校活動可以學習到的事情？　①培養良好生活規範　②建立與人合作的態度　③新的知識和能力　④以上皆可
+(　　)4. 下列哪一種安排家庭活動的方式較適當？　①只由父母決定　②依照心情決定　③家人共同討論　④依照小孩興趣
+(　　)5. 放學後，小光有很多事想做，他應該如何選擇才適當？　①先打電動　②先完成功課　③先看電視　④先看漫畫書
+(　　)6. 下列哪一個是共同參與家庭活動的好處？　①可以買自己想要的玩具　②和家人共同學習　③可以向爸媽領取較多的零用錢　④可以不用完成學校作業
+(　　)7. 下列哪個不是良好的學習習慣？　①勤做筆記　②上課用心思考　③不敢主動提問　④善用網路找資料
+(　　)8. 下列哪個屬於113保護專線的服務內容？　①通報森林火災　②通報搶劫　③兒童少年保護諮詢　④降低登革熱疫情風險
+(　　)9. 關於自我介紹時的做法，下列哪個不正確？　①事先練習　②音量適當　③只介紹家人生日　④下臺鞠躬
+(　　)10. 參加學習活動對我們有什麼影響？　①可以當志工　②讓我們學習與成長　③值得驕傲　④炫耀自己的優點
+
+三、連連看：每線 1 分、共 20 分
+1. 請將下列同學加入適合的社團
+2. 在家中，下列場所較容易發生哪一種意外事故？
+3. 請配對不同的家庭型態：
+4. 連出正確的親人稱謂：
+
+四、圖表題：適當請打ˇ，不適當的打╳：每格 1 分，共 16 分
+1. 如何讓居家環境更安全
+2. 如何學習更有效率？
+3. 哪些是值得學習的生活表現？
+4. 提升繪畫技巧的方法，哪些比較適當請打ˇ，不適當的打╳：
+
+五、對的畫○．不對的打╳（每格 1 分、共 14 分）
+1. 下列哪些人在自我介紹時說明的內容，可以增加大家對他的認識？
+(　　)①真真：「我平常喜歡種花和看書。」
+(　　)②小群：「我的頭髮是自然捲。」
+(　　)③品冠：「我家旁邊有運動公園。」
+(　　)④小雲：「我和真真每天都一起來上學。」
+(　　)⑤婷婷：「我的個性外向，喜歡交朋友。」
+
+2. 升上三年級後，在學習科目和課程上有哪些改變？
+(　　)①有「生活」課程
+(　　)②有「社會」課程
+(　　)③學習的時間變少
+(　　)④學習的科目變多
+
+3. 下列有關自我介紹時要注意的事項，哪些正確？
+(　　)①音量要小聲。
+(　　)②舉止要合宜。
+(　　)③眼睛看地上。
+(　　)④服儀要整齊。
+(　　)⑤做鬼臉的表情。
+
+六、正確打ˇ．不正確打╳（每格 1 分、共 14 分）
+1. 下列是兒童在家中的表現
+(　　)(１)姑姑的女兒年紀比莉莉小，她要稱呼莉莉為堂姐。
+(　　)(２)吃完晚餐後，主動收拾與清洗全家人的碗筷
+(　　)(３)小海在和家人討論旅遊活動時，會充分表達意見。
+(　　)(４)瑞瑞在遇到家庭暴力時，會主動求助鄰居或師長。
+
+2. 關於戶外教育的行為 ：
+(　　)(１)導覽時，與同學大聲討論。
+(　　)(２)活動過程中單獨行動
+(　　)(３)出發前仔細確認需要攜帶的物品
+(　　)(４)先到圖書館查詢相關資訊。
+(　　)(５)穿著美麗但不適當的服裝。
+
+3. 關於做筆記的方法：
+(　　)(１)將有時間順序的重點標上1、2、3
+(　　)(２)用螢光筆將概念標示出來。
+(　　)(３)將課本剪貼到筆記本上。
+(　　)(４)將補充的內容記錄在課文附近。
+(　　)(５)在課本的空白處畫滿插圖。
+
+七、題組題：每格 1 分、共 12 分
+1. 小修全班到「月世界」參觀特殊地形，請選出正確的答案，在（）裡打ˇ
+(１)為了使活動能順利進行，小修應先做好什麼準備？
+（　）ㄅ在書包內放滿零食。
+（　）ㄆ上網瀏覽「月世界」的相關資料
+(２)在聆聽導覽解說時，小修應該怎麼做才能有效學習？
+（　）ㄅ不斷和同學聊天
+（　）ㄆ邊聽老師講解邊做筆記。
+(３)參觀結束後，小修還需要做什麼事？
+（　）ㄅ整理活動中的收穫，在課堂上與同學分享。
+（　）ㄆ反正考試也不會考，隔天就忘掉今天參觀的內容
+
+2. 以下哪項行為是安全的呢請在□裡打ˇ。
+(１)戴手套將少許漂白水倒入水桶中。
+□①危險       □②安全
+(２)外出購物，行走於人行道上。
+□①危險       □②安全
+(３)電器插頭都插在同一條延長線插座上。
+□①危險       □②安全
+
+八、閱讀理解題：每格 1 分，共 4 分
+1. 依下文回答問題：
+小印的媽媽不久前生病請假在家休息，爸爸則因為工作忙碌，除了平日工作到很晚，假日有時也要加班。面對這樣的狀況，小印開始計畫要做一些事。
+(　　)(１)下列哪些事，不是 小印現在應該做的？　①主動做家事②關心媽媽身體狀況③待在自己房間裡，不做任何事　④寫紙條提醒爸爸記得吃晚餐
+(　　)(２)假日時，小印的家比較不適合怎樣的家庭活動？①玩桌遊②分享心情③在家閱讀④出國度假
+
+2. 閱讀下列短文後回答問題
+小惠的家長年接待許多從不同國家到臺灣讀書的境外學生居住。這些學生在小惠家，會與小惠一家人-爸爸、媽媽、弟弟爺爺分享他們國家的美食文化。假日時，小惠一家人也會帶他們到臺灣的夜市品嘗各式美食，並走訪許多名勝古蹟，彼此和樂融融。在這些境外學生離開臺灣後，小惠的媽媽仍透過社群網站與他們聯繫關心彼此的近況。 
+(　　)(１)請問小惠一家共有多少人？①3人②4人　③5人④6人
+(　　)(２)下列哪一項敘述正確？①小惠不喜歡境外學生來家裡住 ②境外學生們回國後仍和小惠的媽媽有聯繫③小惠一家人排斥外國的食物④境外學生放假時都獨自出門
+  </textarea>
+
+  <script>
+  (function(){
+    const raw = document.getElementById('raw').value;
+    const content = document.getElementById('content');
+
+    // Insert as tappable lines, with simple section headings heuristics
+    const lines = raw.split(/\r?\n/);
+    lines.forEach(txt => {
+      const t = txt.trimEnd();
+      if (!t) { const br = document.createElement('div'); br.style.height = '6px'; content.appendChild(br); return; }
+
+      const isSection = /^[一二三四五六七八九十]+、/.test(t) || /^台東縣/.test(t) || /^命題教師/.test(t);
+      const el = document.createElement('div');
+      el.textContent = t;
+      el.className = isSection ? 'section' : 'line';
+      if (/^\d+\./.test(t) || /^[（(]/.test(t) || /^[\uFF08(]\s*[　\s]*\d+/.test(t)) {
+        el.className = 'line'; // ensure questions are tappable
+      }
+      content.appendChild(el);
+    });
+
+    // Web Speech API
+    const synth = window.speechSynthesis;
+    let voices = [];
+    let currentUtterance = null;
+    let currentNode = null;
+
+    function populateVoices() {
+      voices = synth.getVoices();
+      const sel = document.getElementById('voiceSelect');
+      sel.innerHTML = '';
+      // Prefer zh-TW, zh-HK, then zh-CN, then anything Chinese, fallback default
+      const preferred = voices.filter(v => /zh-TW|zh_Hant|zh-HK/i.test(v.lang));
+      const secondary = voices.filter(v => /zh-CN|zh/i.test(v.lang) && !preferred.includes(v));
+      const others = voices.filter(v => !/zh/i.test(v.lang));
+      const ordered = [...preferred, ...secondary, ...others];
+      ordered.forEach(v => {
+        const opt = document.createElement('option');
+        opt.value = v.name;
+        opt.textContent = `${v.name} (${v.lang})`;
+        sel.appendChild(opt);
+      });
+      // Select first preferred if exists
+      if (preferred.length) sel.value = preferred[0].name;
+    }
+    populateVoices();
+    if (typeof speechSynthesis !== 'undefined' && speechSynthesis.onvoiceschanged !== undefined) {
+      speechSynthesis.onvoiceschanged = populateVoices;
+    }
+
+    const rateEl = document.getElementById('rate');
+    const rateVal = document.getElementById('rateVal');
+    rateEl.addEventListener('input', () => rateVal.textContent = parseFloat(rateEl.value).toFixed(2) + '×');
+    rateVal.textContent = parseFloat(rateEl.value).toFixed(2) + '×';
+
+    function speak(text, node=null, onend=null) {
+      stop(); // cancel previous
+      const ut = new SpeechSynthesisUtterance(text);
+      ut.rate = parseFloat(rateEl.value);
+      const sel = document.getElementById('voiceSelect');
+      const chosen = voices.find(v => v.name === sel.value);
+      if (chosen) ut.voice = chosen;
+
+      ut.onend = () => {
+        if (node) node.classList.remove('reading');
+        currentUtterance = null; currentNode = null;
+        if (onend) onend();
+      };
+      ut.onerror = () => {
+        if (node) node.classList.remove('reading');
+        currentUtterance = null; currentNode = null;
+      };
+      if (node) node.classList.add('reading');
+      currentUtterance = ut;
+      currentNode = node;
+      synth.speak(ut);
+    }
+
+    function stop() {
+      if (synth.speaking || synth.pending) synth.cancel();
+      if (currentNode) currentNode.classList.remove('reading');
+      currentUtterance = null;
+      currentNode = null;
+    }
+
+    // Click to read a single line
+    content.addEventListener('click', (e) => {
+      const node = e.target.closest('.line');
+      if (!node) return;
+      speak(node.textContent.trim(), node);
+    });
+
+    // Double-click to force single-line read
+    content.addEventListener('dblclick', (e) => {
+      const node = e.target.closest('.line');
+      if (!node) return;
+      speak(node.textContent.trim(), node);
+    });
+
+    // Auto-play from current line downward
+    document.getElementById('readAllBtn').addEventListener('click', () => {
+      // find first visible line near current scroll
+      const lines = Array.from(document.querySelectorAll('.line'));
+      let startIndex = lines.findIndex(el => el.classList.contains('reading'));
+      if (startIndex < 0) {
+        const top = window.scrollY;
+        startIndex = lines.findIndex(el => el.offsetTop >= top - 10);
+        if (startIndex < 0) startIndex = 0;
+      }
+      let i = startIndex;
+      const playNext = () => {
+        if (i >= lines.length) return;
+        const el = lines[i++];
+        window.scrollTo({ top: Math.max(0, el.offsetTop - 80), behavior: 'smooth' });
+        speak(el.textContent.trim(), el, playNext);
+      };
+      playNext();
+    });
+
+    // Read selected text
+    document.getElementById('readSelectionBtn').addEventListener('click', () => {
+      const sel = window.getSelection();
+      const text = (sel && sel.toString().trim()) || '';
+      if (text) speak(text);
+    });
+
+    document.getElementById('pauseBtn').addEventListener('click', () => { if (synth.speaking) synth.pause(); });
+    document.getElementById('resumeBtn').addEventListener('click', () => { if (synth.paused) synth.resume(); });
+    document.getElementById('stopBtn').addEventListener('click', stop);
+  })();
+  </script>
+</body>
+</html>
